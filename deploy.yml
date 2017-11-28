@@ -7,8 +7,8 @@ services:
     deploy:
       replicas: 1
     command: ["salt-master"]
-  volumes:
-    - master-pki:/etc/salt/pki
+    volumes:
+      - master_pki:/etc/salt/pki
       - ./vol/etc/salt/master:/etc/salt/master
       - ./vol/srv/salt:/srv/salt
     ports:
@@ -24,7 +24,7 @@ services:
   minion_deb:
     image: saltdock_img_deb
     deploy:
-      replicas: 0
+      replicas: 3
     command: ["salt-minion"]
     depends_on:
       - master
@@ -36,7 +36,7 @@ services:
   consul:
     image: consul
     deploy:
-      replicas: 3
+      replicas: 0
     environment:
       CONSUL: master
     networks:
@@ -44,7 +44,7 @@ services:
 
 
 volumes:
-  master-pki:
+  master_pki:
 
 networks:
   internal:
