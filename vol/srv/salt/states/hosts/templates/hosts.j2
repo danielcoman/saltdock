@@ -1,0 +1,8 @@
+127.0.0.1 localhost
+::1 localhost ip6-localhost ip6-loopback
+
+{%- set hostname_list = salt['mine.get']('*', 'hostname') %}
+{%- set ip_list = salt['mine.get']('*', 'eth0') %}
+{%- for server in hostname_list.keys() %}
+{{ ip_list[server][0] }}   {{ hostname_list[server] }}
+{%- endfor %}

@@ -1,0 +1,29 @@
+#
+# Ubuntu Systemd Dockerfile
+#
+
+# Pull base image.
+FROM solita/ubuntu-systemd
+
+# Basic image update
+RUN \
+  apt update -y && apt upgrade -y && \
+  apt install -y software-properties-common && \
+  apt install -y curl htop man unzip vim wget telnet net-tools iputils-ping dnsutils
+
+# Repo
+COPY repo/saltstack.list /etc/apt/sources.list.d/saltstack.list
+COPY repo/SALTSTACK-GPG-KEY.pub /tmp/SALTSTACK-GPG-KEY.pub
+
+# Install salt
+RUN \
+  apt-key add /tmp/SALTSTACK-GPG-KEY.pub && \
+  apt update -y && \
+  apt install -y salt-minion
+
+# Run script
+COPY run.sh /usr/local/bin/run.sh
+RUN chmod +x /usr/local/bin/run.sh
+
+ENTRYPOINT ["run.sh"]
+CMD ["/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]

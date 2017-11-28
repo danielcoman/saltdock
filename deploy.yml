@@ -1,0 +1,55 @@
+version: '3.3'
+services:
+
+  master:
+    hostname: saltdock_master
+    image: saltdock_img_deb
+    deploy:
+      replicas: 1
+    command: ["salt-master"]
+  volumes:
+    - master-pki:/etc/salt/pki
+      - ./vol/etc/salt/master:/etc/salt/master
+      - ./vol/srv/salt:/srv/salt
+    ports:
+      - 4505
+      - 4506
+    environment:
+      SALT_TYPE: master
+    networks:
+      - internal
+    depends_on:
+      - internal
+
+  minion_deb:
+    image: saltdock_img_deb
+    deploy:
+      replicas: 0
+    command: ["salt-minion"]
+    depends_on:
+      - master
+    environment:
+      SALT_TYPE: minion
+    networks:
+      - internal
+
+  consul:
+    image: consul
+    deploy:
+      replicas: 3
+    environment:
+      CONSUL: master
+    networks:
+      - internal
+
+
+volumes:
+  master-pki:
+
+networks:
+  internal:
+    driver: overlay
+    attachable: true
+    ipam:
+      config:
+        - subnet: 172.10.0.0/16

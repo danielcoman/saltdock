@@ -1,0 +1,17 @@
+auto_accept: True
+
+file_roots:
+  base:
+    - /srv/salt
+    - /srv/salt/states
+  dev:
+    - /srv/salt/dev
+    - /srv/salt/states
+
+
+pillar_roots:
+  base:
+    - /srv/salt/pillar
+
+nodegroups:
+  cluster: 'minion*'

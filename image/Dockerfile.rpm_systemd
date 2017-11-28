@@ -1,0 +1,22 @@
+#
+# Centos Systemd Dockerfile
+#
+
+# Pull base image.
+FROM centos/systemd
+
+# Basic image update
+RUN \
+  yum update -y && \
+  yum install -y curl htop man unzip vim wget telnet net-tools iputils-ping dnsutils && \
+  yum install -y https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7.noarch.rpm && \
+  yum install -y salt-minion
+
+RUN systemctl enable salt-minion
+
+# Run script
+COPY run.sh /usr/local/bin/run.sh
+RUN chmod +x /usr/local/bin/run.sh
+
+ENTRYPOINT ["run.sh"]
+CMD ["/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]

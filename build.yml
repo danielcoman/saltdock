@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+
+# Ubuntu image
+  saltdock_img_deb:
+    build:
+      context: ./image
+      dockerfile: ./Dockerfile.deb
+    image: saltdock_img_deb
+
+# Ubuntu image with systemd
+  saltdock_img_deb_systemd:
+    build:
+      context: ./image
+      dockerfile: ./Dockerfile.deb_systemd
+    image: saltdock_img_deb_systemd
+
+# Cenots image with systemd
+  saltdock_img_rpm_systemd:
+    build:
+      context: ./image
+      dockerfile: ./Dockerfile.rpm_systemd
+    image: saltdock_img_rpm_systemd
